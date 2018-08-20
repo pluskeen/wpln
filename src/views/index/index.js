@@ -1,4 +1,6 @@
-import foo from "./foo.js";
+import "./index.css"
+import "./index.less"
+
 var r = function() {
   console.log(foo);
 };
