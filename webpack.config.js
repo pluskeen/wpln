@@ -7,7 +7,6 @@ const ExtractTextPlugin = require("extract-text-webpack-plugin");
 // const fooExtractCss = new ExtractTextPlugin('foo/[name].[hash].css')
 // const indexExtractCss = new ExtractTextPlugin('index/[name].[hash].css')
 
-
 //__dirname  获得当前执行文件的 带有完整绝对路径的 所在目录的 完整目录名
 //__filename 获得当前执行文件的 带有完整绝对路径的 文件名
 
@@ -35,7 +34,7 @@ module.exports = {
         test: /\.css$/,
         use: ExtractTextPlugin.extract({
           fallback: "style-loader",
-          use: "css-loader"
+          use: ["css-loader"]
         })
       },
       {
@@ -44,6 +43,19 @@ module.exports = {
           fallback: "style-loader",
           use: ["css-loader", "less-loader"]
         })
+      },
+      {
+        test: /\.(png|jpge?|gif|jfif)$/,
+        use: [
+          {
+            loader: "file-loader",
+            options: {
+              outputPath: "image/",
+              name: "[name].[hash:base64:7].[ext]",
+              publicPath: "../image/"
+            }
+          }
+        ]
       }
       // 每个页面的 ExtractTextPlugin 只处理这个页面的样式文件
       // {
@@ -60,7 +72,6 @@ module.exports = {
       //     use: ['css-loader', "less-loader"]
       //   })
       // },
-
     ]
   },
   plugins: [
@@ -84,12 +95,16 @@ module.exports = {
       inject: true
     }),
     // 使用 [contenthash] 会报错，改用 [hash] 正常
-    new ExtractTextPlugin("css/[name].[hash].css")
+    new ExtractTextPlugin("css/[name].[hash:base64:7].css")
     // fooExtractCss,
     // indexExtractCss
   ],
   output: {
     path: path.resolve(__dirname, "dist"),
-    filename: "[name].[hash].js"
+    filename: "[name].[hash:base64:7].js"
+  },
+  // 模块路径解析相关配置
+  resolve:{
+
   }
 };
